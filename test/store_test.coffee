@@ -1,6 +1,7 @@
 fs = require('fs')
 path = require('path')
-{ FileStore, S3Store , TestStore } = require('../lib/store')
+cloudinary = require('cloudinary')
+{ FileStore, S3Store , CloudinaryStore, TestStore } = require('../lib/store')
 
 describe 'FileStore', ->
   store = ''
@@ -88,6 +89,29 @@ describe "S3Store", ->
     store.save 'test', version, 'test', null, (err, url)->
       err.message.should.eql 'Upload Error'
       done()
+
+describe "CloudinaryStore", ->
+  store = null
+  version = null
+
+  beforeEach ->
+    store = new CloudinaryStore
+      cloud_name: 'test'
+      API_KEY: 'test'
+      API_SECRET: 'test'
+    version =
+      name: 'test'
+      extension: 'jpg'
+    store.configure = ->
+      cloudinary.config
+
+  it 'should return dstPath', ->
+    store.getDstPath('test', version)
+      .should.equal('test-test')
+
+  it 'should return urlPath', ->
+    store.getUrlPath('test', version)
+      .should.equal('https://res.cloudinary/test/')
 
 describe "TestStore", ->
   it "do nothing on storing images", ->

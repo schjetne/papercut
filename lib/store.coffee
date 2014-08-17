@@ -1,5 +1,6 @@
 fs = require('fs')
 knox = require('knox')
+cloudinary = require('cloudinary')
 path = require('path')
 
 ###
@@ -111,6 +112,71 @@ exports.S3Store = class S3Store
     @client.putBuffer buffer, dstPath, @headers, (err, res)=>
       @result[version.name] = @getUrlPath(name, version)
       callback(err, @result[version.name])
+
+###
+Cloudinary store
+###
+
+exports.CloudinaryStore = class CloudinaryStore
+  constructor: (@config)->
+    @result = {}
+
+  ###
+  Configure Cloudinary
+  ###
+
+  configure: ->
+    cloudinary.config
+      api_key: @config.API_KEY
+      api_secret: @config.API_SECRET
+      cloud_name: @config.cloud
+
+  ###
+  Get relative file path on Cloudinary
+
+  @param {String} name
+  @param {Object} version
+
+  @api private
+  ###
+  getDstPath: (name, version)->
+    "#{name}-#{version.name}"
+
+  ###
+  Get url path of file on Cloudinary
+
+  @param {String} name
+  @param {Object} version
+
+  @api private
+  ###
+  getUrlPath: (name, version)->
+    @configure()
+    cloudinary.url(@getDstPath(name, version))
+
+  ###
+  Upload file to Cloudinary and return url path
+
+  @param {String} name
+  @param {Object} version
+  @param {Object} stdout stream
+  @param {Object} stderr stream
+  @param {Function} callback
+
+  @api public
+  ###
+  save: (name, version, stdout, stderr, callback)=>
+    return callback(new Error(stderr)) if stderr? and stderr.length isnt 0
+
+    dstPath = @getDstPath name, version
+
+    @configure()
+    stream = cloudinary.upload_stream((err, result) ->
+      @result[version.name] = @getUrlPath(name, version)
+      callback(err, @result[version.name])
+    , public_id: dstPath)
+
+    stdout.on('data', stream.write).on('end', stream.end);
 
 ###
 Test store for testing
