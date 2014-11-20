@@ -80,7 +80,7 @@ exports.S3Store = class S3Store
       secret: config.S3_SECRET
       bucket: config.bucket
     @headers =
-      'Content-Type': "image/#{@config.extension}"
+      'Content-Type': @config.contentType or "image/#{@config.extension}"
       'x-amz-acl': 'public-read'
 
   ###
