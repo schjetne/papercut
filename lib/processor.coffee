@@ -73,8 +73,8 @@ module.exports = class Processor
     size = @getSize(version.size)
     gmi = @gm(path)
     format = version.extension or @config.extension
-    if method is "resize"
-      gmi.resize size.width, size.height
+    if (method is "resize") or (method is "crop")
+      gmi.resize size.width, size.height ">"
     if method is "crop"
       gmi.crop size.width, size.height, 0, 0
     if (version.autoOrient or @config.autoOrient)
