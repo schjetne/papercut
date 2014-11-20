@@ -76,6 +76,7 @@ module.exports = class Processor
     if method is "resize"
       gmi.resize size.width, size.height, ">"
     if method is "crop"
+      gmi.resize size.width, size.height, "^>"
       gmi.crop size.width, size.height, 0, 0
     if (version.autoOrient or @config.autoOrient)
       gmi.autoOrient()
