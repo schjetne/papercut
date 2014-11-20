@@ -1,5 +1,7 @@
 # PAPERCUT!
 
+### This Papercut repository contains a modified version that will probably be useless for anyone else. Go to the [main repository](https://github.com/Rafe/papercut) for the latest official Papercut version.
+
 Papercut handle image processing, versioning and storage for you, in node.js.
 
 ## Features
