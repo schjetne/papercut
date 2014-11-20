@@ -21,13 +21,13 @@ describe "Processor", ->
   describe 'process', ->
 
     it "should crop image", (done)->
-      processor.crop 'test', './images/sample.jpg', version, (err, stdout, stderr)->
+      processor.crop 'test', './images/sample.jpg', version, (err, buffer)->
         err?.should.be.false
         (typeof stdout).should.eql 'string'
         done()
 
     it "should resize image", (done)->
-      processor.resize 'test', './images/sample.jpg', version, (err, stdout, stderr)->
+      processor.resize 'test', './images/sample.jpg', version, (err, buffer)->
         err?.should.be.false
         (typeof stdout).should.eql 'string'
         done()
@@ -39,7 +39,7 @@ describe "Processor", ->
         done()
 
     it "should handle error", (done)->
-      processor.crop 'test', './images/error.jpg', version, (err, stdout, stderr)->
+      processor.crop 'test', './images/error.jpg', version, (err, buffer)->
         err?.should.be.ok
         err.message?.should.be.ok
         done()

@@ -71,8 +71,8 @@ module.exports = class Processor
   ###
   process: (method, name, path, version, callback)->
     size = @getSize(version.size)
-    gmi = @gm(path);
-    output = name + "." + (version.extension or @config.extension)
+    gmi = @gm(path)
+    format = version.extension or @config.extension
     if method is "resize"
       gmi.resize size.width, size.height
     if method is "crop"
@@ -80,4 +80,4 @@ module.exports = class Processor
     if (version.autoOrient or @config.autoOrient)
       gmi.autoOrient()
     gmi.quality version.quality or @config.quality
-    gmi.write output, callback
+    gmi.toBuffer format, callback

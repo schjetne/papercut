@@ -37,18 +37,16 @@ exports.FileStore = class FileStore
 
   @param {String} name
   @param {Object} version
-  @param {Object} stdout stream
-  @param {Object} stderr stream
+  @param {Object} buffer stream
   @param {Function} callback
 
   @api public
   ###
-  save: (name, version, stdout, stderr, callback)=>
-    return callback(new Error(stderr)) if stderr? and stderr.length isnt 0
+  save: (name, version, buffer, callback)=>
 
     @result[version.name] = @getUrlPath(name, version)
 
-    fs.writeFile @getDstPath(name, version), stdout, 'binary', (err, file)=>
+    fs.writeFile @getDstPath(name, version), buffer, 'binary', (err, file)=>
       callback(err, @result[version.name])
 
   ###
@@ -116,16 +114,14 @@ exports.S3Store = class S3Store
 
   @param {String} name
   @param {Object} version
-  @param {Object} stdout stream
-  @param {Object} stderr stream
+  @param {Object} buffer stream
   @param {Function} callback
 
   @api public
   ###
-  save: (name, version, stdout, stderr, callback)=>
-    return callback(new Error(stderr)) if stderr? and stderr.length isnt 0
+  save: (name, version, buffer, callback)=>
 
-    buffer = new Buffer(stdout, 'binary')
+    buffer = new Buffer(buffer, 'binary')
     dstPath = @getDstPath name, version
 
     @headers['Content-Length'] = buffer.length
@@ -160,7 +156,7 @@ exports.TestStore = class TestStore
   getDstPath: (name, version)->
     "#{name}-#{version.name}.#{@config.extension}"
 
-  save: (name, version, stdout, stderr, callback)=>
+  save: (name, version, buffer, callback)=>
     @result[version.name] = @getUrlPath(name, version)
     callback(null, @result[version.name])
 
