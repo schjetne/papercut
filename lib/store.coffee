@@ -92,7 +92,10 @@ exports.S3Store = class S3Store
   @api private
   ###
   getDstPath: (name, version)->
-    "#{name}-#{version.name}.#{@config.extension}"
+    if version.name isnt "original"
+      "#{name}-#{version.name}.#{@config.extension}"
+    else
+      "#{name}.#{@config.extension}"
 
   ###
   Get url path of file on S3
