@@ -106,7 +106,10 @@ exports.S3Store = class S3Store
   @api private
   ###
   getUrlPath: (name, version)->
-    "#{@awsUrl}/#{@config.bucket}/#{name}-#{version.name}.#{@config.extension}"
+    if version.name isnt "original"
+      "#{@awsUrl}/#{@config.bucket}/#{name}-#{version.name}.#{@config.extension}"
+    else
+      "#{@awsUrl}/#{@config.bucket}/#{name}.#{@config.extension}"
 
   ###
   Upload file to S3 and return url path
